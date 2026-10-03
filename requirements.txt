@@ -1,0 +1,8 @@
+certifi==2026.6.17
+mlx==0.31.2
+openai==2.36.0
+pillow==12.2.0
+python-dotenv==1.2.2
+tavily-python==0.7.24
+tqdm==4.67.3
+VapourSynth==77
