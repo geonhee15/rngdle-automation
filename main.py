@@ -15,31 +15,35 @@ options.add_argument('--headless')
 options.add_argument('--disable-gpu')  
 options.add_argument('--window-size=1920,1080') 
 
+tb_filter = input("필터링 옵션 1: TOP부터 저장하기 위해선 TOP을, BOTTOM부터 저장하기 위해선 BOTTOM를 입력해주세요: ")
+perc_filter = int(input("필터링 옵션 2: 이 확률부터 저장하기: "))
+
 def process_and_save_screenshot(percentage_text, output_text, snapshots_dir, driver):
     print(f"Percentage text = {percentage_text}")
     percentage_image = percentage_text.replace("%", "").strip()
     
-    if "TOP" in percentage_text.upper():
+    if tb_filter in percentage_text.upper():
         digits = re.findall(r"\d+", percentage_text)
         if digits:
             percent_value = int(digits[0])
-            if percent_value <= 5:
-                print(f'Top {percent_value}% 감지! (5% 이하)')
+            if percent_value <= perc_filter:
+                print(f'{tb_filter} {percent_value}% 감지! (5% 이하)')
                 screenshot_path = os.path.join(snapshots_dir, f'{percentage_image}_{output_text}.png')
                 driver.save_screenshot(screenshot_path)
                 print(f'풀스크린 캡처 완료! ({screenshot_path})')
                 return True
             else:
-                print(f"Top 결과이나 5% 초과 ({percentage_text}) -> 캡처 생략")
+                print(f"{tb_filter} 결과이나 5% 초과 ({percentage_text}) -> 캡처 생략")
                 return True
     else:
-        print(f"Top 결과가 아님 ({percentage_text}) -> 캡처 생략")
+        print(f"{tb_filter} 결과가 아님 ({percentage_text}) -> 캡처 생략")
         return True
     return False
 
 try:
     while True:
         driver = webdriver.Chrome(options=options)
+
         try:
             url = 'https://rngdle.com'
             driver.get(url)
@@ -94,7 +98,9 @@ try:
         except Exception as e:
             print(f"요소 불러오기 실패: {e}")
 
-        time.sleep(3)
+        finally:
+            driver.quit()
 
-finally:
-    driver.quit()
+        time.sleep(3)
+except KeyboardInterrupt:
+    print("프로세스를 종료합니다")
