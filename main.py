@@ -36,10 +36,9 @@ def process_and_save_screenshot(percentage_text, output_text, snapshots_dir, dri
         return True
     return False
 
-driver = webdriver.Chrome(options=options)
-
 try:
     while True:
+        driver = webdriver.Chrome(options=options)
         try:
             url = 'https://rngdle.com'
             driver.get(url)
