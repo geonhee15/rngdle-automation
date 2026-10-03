@@ -28,13 +28,13 @@ def process_and_save_screenshot(percentage_text, output_text, snapshots_dir, dri
         if digits:
             percent_value = int(digits[0])
             if percent_value <= perc_filter:
-                print(f'{uppercase_tb_filter} {percent_value}% 감지! (5% 이하)')
+                print(f'{uppercase_tb_filter} {percent_value}% 감지! ({perc_filter}% 이하)')
                 screenshot_path = os.path.join(snapshots_dir, f'{percentage_image}_{output_text}.png')
                 driver.save_screenshot(screenshot_path)
                 print(f'풀스크린 캡처 완료! ({screenshot_path})')
                 return True
             else:
-                print(f"{uppercase_tb_filter} 결과이나 5% 초과 ({percentage_text}) -> 캡처 생략")
+                print(f"{uppercase_tb_filter} 결과이나 {perc_filter}% 초과 ({percentage_text}) -> 캡처 생략")
                 return True
     else:
         print(f"{uppercase_tb_filter} 결과가 아님 ({percentage_text}) -> 캡처 생략")
