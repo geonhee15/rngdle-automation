@@ -20,7 +20,7 @@ perc_filter = int(input("필터링 옵션 2: 이 확률부터 저장하기: "))
 
 def process_and_save_screenshot(percentage_text, output_text, snapshots_dir, driver):
     print(f"Percentage text = {percentage_text}")
-    percentage_image = percentage_text.replace("%", "").strip()
+    percentage_image = percentage_text.replace("%", "").replace("<", "under").strip()
     
     if tb_filter in percentage_text.upper():
         digits = re.findall(r"\d+", percentage_text)
