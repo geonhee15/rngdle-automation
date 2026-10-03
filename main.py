@@ -36,63 +36,65 @@ def process_and_save_screenshot(percentage_text, output_text, snapshots_dir, dri
         return True
     return False
 
-while True:
-    driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(options=options)
 
-    try:
-        url = 'https://rngdle.com'
-        driver.get(url)
-        print("Chrome OK")
+try:
+    while True:
+        try:
+            url = 'https://rngdle.com'
+            driver.get(url)
+            print("Chrome OK")
 
-        wait = WebDriverWait(driver, 10)
+            wait = WebDriverWait(driver, 10)
 
-        button = wait.until(EC.element_to_be_clickable((By.XPATH, "//main//button")))
-        button.click()
+            button = wait.until(EC.element_to_be_clickable((By.XPATH, "//main//button")))
+            button.click()
 
-        driver.refresh()
+            driver.refresh()
 
-        wait.until(EC.presence_of_element_located((By.XPATH, "//main//span")))
+            wait.until(EC.presence_of_element_located((By.XPATH, "//main//span")))
 
-        all_spans = driver.find_elements(By.XPATH, "//main//span")
-        visible_spans = [s for s in all_spans if s.is_displayed() and s.text.strip().isdigit()]
+            all_spans = driver.find_elements(By.XPATH, "//main//span")
+            visible_spans = [s for s in all_spans if s.is_displayed() and s.text.strip().isdigit()]
 
-        if visible_spans:
-            last_parent = visible_spans[-1].find_element(By.XPATH, "..")
-            target_spans = last_parent.find_elements(By.XPATH, ".//span")
+            if visible_spans:
+                last_parent = visible_spans[-1].find_element(By.XPATH, "..")
+                target_spans = last_parent.find_elements(By.XPATH, ".//span")
 
-            output_text = "".join([span.text.strip() for span in target_spans if span.text.strip().isdigit()])
-            print(f"number = {output_text}")
+                output_text = "".join([span.text.strip() for span in target_spans if span.text.strip().isdigit()])
+                print(f"number = {output_text}")
 
-            percentage_xpath = (
-                "//main//span["
-                "contains(., 'TOP') or contains(., 'Top') or "
-                "contains(., 'BOTTOM') or contains(., 'Bottom')"
-                "]"
-            )
-
-            try:
-                percentage_element = wait.until(
-                    EC.visibility_of_element_located((By.XPATH, percentage_xpath))
+                percentage_xpath = (
+                    "//main//span["
+                    "contains(., 'TOP') or contains(., 'Top') or "
+                    "contains(., 'BOTTOM') or contains(., 'Bottom')"
+                    "]"
                 )
-                percentage_text = percentage_element.text.strip()
-                process_and_save_screenshot(percentage_text, output_text, snapshots_dir, driver)
 
-            except Exception:
                 try:
-                    time.sleep(0.5)
-                    percentage_element = driver.find_element(By.XPATH, percentage_xpath)
+                    percentage_element = wait.until(
+                        EC.visibility_of_element_located((By.XPATH, percentage_xpath))
+                    )
                     percentage_text = percentage_element.text.strip()
-                    print("(재시도 감지 중...)")
                     process_and_save_screenshot(percentage_text, output_text, snapshots_dir, driver)
+
                 except Exception:
-                    print("Percentage 정보를 가져오지 못했습니다.")
+                    try:
+                        time.sleep(0.5)
+                        percentage_element = driver.find_element(By.XPATH, percentage_xpath)
+                        percentage_text = percentage_element.text.strip()
+                        print("(재시도 감지 중...)")
+                        process_and_save_screenshot(percentage_text, output_text, snapshots_dir, driver)
+                    except Exception:
+                        print("Percentage 정보를 가져오지 못했습니다.")
 
-        else:
-            print("숫자를 찾지 못했습니다.")
+            else:
+                print("숫자를 찾지 못했습니다.")
 
-    except Exception as e:
-        print(f"요소 불러오기 실패: {e}")
+        except Exception as e:
+            print(f"요소 불러오기 실패: {e}")
 
-    finally:
         time.sleep(3)
-        driver.quit()
+
+finally:
+    driver.quit()
