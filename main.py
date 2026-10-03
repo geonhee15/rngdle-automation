@@ -17,6 +17,7 @@ options.add_argument('--window-size=1920,1080')
 
 def process_and_save_screenshot(percentage_text, output_text, snapshots_dir, driver):
     print(f"Percentage text = {percentage_text}")
+    percentage_image = percentage_text.replace("%", "").strip()
     
     if "TOP" in percentage_text.upper():
         digits = re.findall(r"\d+", percentage_text)
@@ -24,7 +25,7 @@ def process_and_save_screenshot(percentage_text, output_text, snapshots_dir, dri
             percent_value = int(digits[0])
             if percent_value <= 5:
                 print(f'Top {percent_value}% 감지! (5% 이하)')
-                screenshot_path = os.path.join(snapshots_dir, f'{output_text}.png')
+                screenshot_path = os.path.join(snapshots_dir, f'{percentage_image}_{output_text}.png')
                 driver.save_screenshot(screenshot_path)
                 print(f'풀스크린 캡처 완료! ({screenshot_path})')
                 return True
