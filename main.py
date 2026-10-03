@@ -15,6 +15,7 @@ options.add_argument('--headless')
 options.add_argument('--disable-gpu')  
 options.add_argument('--window-size=1920,1080') 
 
+print("Developed by Geonhee15 (V1.0)")
 tb_filter = input("필터링 옵션 1: TOP부터 저장하기 위해선 TOP을, BOTTOM부터 저장하기 위해선 BOTTOM를 입력해주세요: ")
 uppercase_tb_filter = tb_filter.upper()
 perc_filter = int(input("필터링 옵션 2: 이 확률부터 저장하기: "))
